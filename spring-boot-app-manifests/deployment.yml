@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: spring-boot-app
-        image: shikha1818/cipipeline:replaceImageTag
+        image: shikha1818/cipipeline:2
         ports:
         - containerPort: 8080
