@@ -31,7 +31,7 @@ pipeline {
     }
     stage('Build and Push Docker Image') {
       environment {
-        DOCKER_IMAGE = "shikha1818/cidpipeline:${BUILD_NUMBER}"
+        DOCKER_IMAGE = "shikha1818/myjob:${BUILD_NUMBER}"
         // DOCKERFILE_LOCATION = "spring-boot-app/Dockerfile"
          REGISTRY_CREDENTIALS = credentials('shikha1818')
       }
@@ -47,7 +47,7 @@ pipeline {
     }
     stage('Update Deployment File') {
         environment {
-            GIT_REPO_NAME = "cicdpipline"
+            GIT_REPO_NAME = "myjob"
             GIT_USER_NAME = "ShikhaaSharmaa45"
         }
         steps {
