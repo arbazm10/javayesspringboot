@@ -21,7 +21,7 @@ pipeline {
     }
     stage('Static Code Analysis') {
       environment {
-        SONAR_URL = "http://35.192.47.64:9000"
+        SONAR_URL = "http://35.238.35.7:9000"
       }
       steps {
         withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_AUTH_TOKEN')]) {
@@ -31,7 +31,7 @@ pipeline {
     }
     stage('Build and Push Docker Image') {
       environment {
-        DOCKER_IMAGE = "shikha1818/thecode:${BUILD_NUMBER}"
+        DOCKER_IMAGE = "shikha1818/mycode:${BUILD_NUMBER}"
         // DOCKERFILE_LOCATION = "spring-boot-app/Dockerfile"
         REGISTRY_CREDENTIALS = credentials('shikha1818')
       }
@@ -56,7 +56,7 @@ pipeline {
                     git config user.email "Shikha333745@gmail.com"
                     git config user.name "Shikha Sharma"
                     BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i -e "s/thecode.*/thecode:${BUILD_NUMBER}/g" spring-boot-app-manifests/deployment.yml
+                    sed -i -e "s/mycode.*/mycode:${BUILD_NUMBER}/g" spring-boot-app-manifests/deployment.yml
                     git add spring-boot-app-manifests/deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
                     git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
