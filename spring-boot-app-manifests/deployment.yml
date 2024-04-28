@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: spring-boot-app
-        image: shikha1818/mypipeline
+        image: shikha1818/thecode
         ports:
         - containerPort: 8080
