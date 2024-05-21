@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: spring-boot-app
-        image: arbazm10/mycode:1
+        image: arbazm10/mycode:4
         ports:
         - containerPort: 8080
