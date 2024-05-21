@@ -55,8 +55,8 @@ pipeline {
                 sh '''
                     git config user.email "arbazmtn@gmail.com"
                     git config user.name "Arbaz M"
-                    sudo chown -R root:root .git || true
-                    sudo chmod -R 775 .git || true
+                    sudo chown -R jenkins:jenkins .git
+                    sudo chmod -R 775 .git 
                     BUILD_NUMBER=${BUILD_NUMBER}
                     sed -i -e "s/mycode.*/mycodeaz:${BUILD_NUMBER}/g" spring-boot-app-manifests/deployment.yml
                     git add spring-boot-app-manifests/deployment.yml
