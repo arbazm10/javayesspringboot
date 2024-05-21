@@ -31,7 +31,7 @@ pipeline {
     }
     stage('Build and Push Docker Image') {
       environment {
-        DOCKER_IMAGE = "arbazm10/mycode:${BUILD_NUMBER}"
+        DOCKER_IMAGE = "arbazm10/mycodeaz:${BUILD_NUMBER}"
         // DOCKERFILE_LOCATION = "spring-boot-app/Dockerfile"
         REGISTRY_CREDENTIALS = credentials('dockerhub')
       }
@@ -56,7 +56,7 @@ pipeline {
                     git config user.email "arbazmtn@gmail.com"
                     git config user.name "Arbaz M"
                     BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i -e "s/mycode.*/mycode:${BUILD_NUMBER}/g" spring-boot-app-manifests/deployment.yml
+                    sed -i -e "s/mycode.*/mycodeaz:${BUILD_NUMBER}/g" spring-boot-app-manifests/deployment.yml
                     git add spring-boot-app-manifests/deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
                     git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
