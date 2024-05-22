@@ -52,7 +52,7 @@ stages:
     - script: |
         git config user.email "arbazmtn@gmail.com"
         git config user.name "Arbaz M"
-        sed -i -e "s/mycode.*/mycodeaz:$(Build.BuildId)/g" spring-boot-app-manifests/deployment.yml
+        sed -i -e "s/mycode.*/mycodeaz1:$(Build.BuildId)/g" spring-boot-app-manifests/deployment.yml
         git add spring-boot-app-manifests/deployment.yml
         git commit -m "Update deployment image to version $(Build.BuildId)"
         git push https://$(GITHUB_TOKEN)@github.com/$(GIT_USER_NAME)/$(GIT_REPO_NAME) HEAD:main
