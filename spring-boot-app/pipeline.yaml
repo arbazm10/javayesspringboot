@@ -1,0 +1,73 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  registry: 'arbazm10/mycodeaz'
+  SONAR_URL: 'http://172.191.129.253:9000/'
+  GIT_REPO_NAME: 'javayesspringboot'
+  GIT_USER_NAME: 'arbazm10'
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    container: 
+      image: shikha1818/maven-docker-agent:latest
+      options: '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+    steps:
+    - script: echo passed
+      displayName: 'Checkout'
+    
+    - script: ls -ltr
+      displayName: 'Build and Test'
+    
+    - script: |
+        cd spring-boot-app
+        mvn clean package
+      displayName: 'Build Project'
+    
+    - script: |
+        cd spring-boot-app
+        mvn sonar:sonar -Dsonar.login=$(SONAR_AUTH_TOKEN) -Dsonar.host.url=$(SONAR_URL)
+      displayName: 'Static Code Analysis'
+      env:
+        SONAR_AUTH_TOKEN: $(SONAR_AUTH_TOKEN)
+      condition: succeeded()
+    
+    - script: |
+        cd spring-boot-app
+        docker build -t $(registry):$(Build.BuildId) .
+        docker login -u $(DOCKERHUB_USERNAME) -p $(DOCKERHUB_PASSWORD)
+        docker push $(registry):$(Build.BuildId)
+        docker push $(registry):latest
+      displayName: 'Build and Push Docker Image'
+      env:
+        DOCKERHUB_USERNAME: $(DOCKERHUB_USERNAME)
+        DOCKERHUB_PASSWORD: $(DOCKERHUB_PASSWORD)
+      condition: succeeded()
+
+    - script: |
+        git config user.email "arbazmtn@gmail.com"
+        git config user.name "Arbaz M"
+        sed -i -e "s/mycode.*/mycodeaz:$(Build.BuildId)/g" spring-boot-app-manifests/deployment.yml
+        git add spring-boot-app-manifests/deployment.yml
+        git commit -m "Update deployment image to version $(Build.BuildId)"
+        git push https://$(GITHUB_TOKEN)@github.com/$(GIT_USER_NAME)/$(GIT_REPO_NAME) HEAD:main
+      displayName: 'Update Deployment File'
+      env:
+        GITHUB_TOKEN: $(GITHUB_TOKEN)
+      condition: succeeded()
+      
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: 'spring-boot-app/target/*.jar'
+        ArtifactName: 'drop'
+      condition: succeeded()
+      
+resources:
+  repositories:
+    - repository: self
+      type: git
